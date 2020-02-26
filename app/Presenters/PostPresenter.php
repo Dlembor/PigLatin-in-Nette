@@ -60,7 +60,13 @@ class PostPresenter extends Nette\Application\UI\Presenter{
 	public function commentFormSucceeded(UI\Form $form, \stdClass $values): void{
 		
 		$this->word[0]=$values->word;
-		$this->word[1]=$this->Translate($values->word);
+		$RozsekanyRadek=preg_split ('/\s+/',trim($values->word));
+		foreach ($RozsekanyRadek as $key => $value) {
+			$RozsekanyRadek[$key]=$this->Translate($value);
+
+		}
+
+		$this->word[1]=implode(" ", $RozsekanyRadek);
 		$this->template->post = $this->word;
 	}
 	
@@ -82,7 +88,7 @@ class PostPresenter extends Nette\Application\UI\Presenter{
 	protected function createComponentCommentForm(){
 		$form = new UI\Form; 
 
-		$form->addText('word', 'Slovo pro překlad: ')
+		$form->addText('word', 'String pro překlad: ')
 			 ->setRequired();
 		$form->addSubmit('send', 'Přeložit');
 		$form->onSuccess[] = [$this, 'commentFormSucceeded'];
