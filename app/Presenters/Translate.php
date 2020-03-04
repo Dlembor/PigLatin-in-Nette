@@ -10,7 +10,7 @@ class Translate
      * Translate constructor.
      * @param $string
      */
-    public function __construct(&$string) {
+    public function __construct(string &$string) {
         $words = str_split($string);
         $skip=false;
         $consonant=false;
@@ -43,7 +43,7 @@ class Translate
      * @param $letter
      * @return bool
      */
-    private function  isVowel($letter): bool
+    private function  isVowel(string $letter): bool
     {
         switch (strtoupper($letter)){
             case 'A':

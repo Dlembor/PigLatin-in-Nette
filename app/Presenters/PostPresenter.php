@@ -6,6 +6,8 @@ namespace App\Presenters;
 
 use Nette;
 use Nette\Application\UI;
+use Nette\Application\UI\Form;
+use stdClass;
 
 
 class PostPresenter extends Nette\Application\UI\Presenter{
@@ -13,10 +15,10 @@ class PostPresenter extends Nette\Application\UI\Presenter{
 	private $pigLatinString='';
 
     /**
-     * @param UI\Form $form
-     * @param \stdClass $values
+     * @param Form $form
+     * @param stdClass $values
      */
-    public function commentFormSucceeded(UI\Form $form, \stdClass $values): void{
+    public function commentFormSucceeded(Form $form, stdClass $values): void{
 		$this->originalString=$values->word;
 		$splitString=preg_split ('/\s+/',trim($values->word));
 
@@ -44,11 +46,11 @@ class PostPresenter extends Nette\Application\UI\Presenter{
 
     /**
      * Create form to get word and start translate after hitting submit
-     * @return UI\Form
+     * @return Form
      */
-    public function createComponentCommentForm(): \Nette\Application\UI\Form
+    public function createComponentCommentForm(): Form
     {
-		$form = new UI\Form;
+		$form = new Form;
 		$form->addText('word', 'String pro překlad: ')
 			 ->setRequired();
 		$form->addSubmit('send', 'Přeložit');
