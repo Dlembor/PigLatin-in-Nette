@@ -8,44 +8,44 @@ class Translate
 {
     /**
      * Translate constructor.
-     * @param $word
+     * @param $string
      */
-    public function __construct(&$word) {
-        $splitWord = str_split($word);
+    public function __construct(&$string) {
+        $words = str_split($string);
         $skip=false;
         $consonant=false;
-        foreach ($splitWord as $key => $value) {
-            if ($this->isVowel($value)){
+        foreach ($words as $key => $word) {
+            if ($this->isVowel($word)){
                 if ($key==0){
-                    $splitWord[]="'hay";
+                    $words[]="'hay";
                     break;
                 }
                 $skip=true;
                 break;
             }else{
                 $consonant=true;
-                $splitWord[]=$value;
+                $words[]=$word;
 
-                if(strtoupper($value) === 'Q' && strtoupper($splitWord[$key+1]) === 'U' &&$this->isVowel($splitWord[$key + 2])){
-                    $splitWord[]=$splitWord[$key+1];
-                    $splitWord[$key+1]= '';
+                if($key===0 && strtoupper($word) === 'Q' && strtoupper($words[$key+1]) === 'U' &&$this->isVowel($words[$key + 2])){
+                    $words[]=$words[$key+1];
+                    $words[$key+1]= '';
                 }
-                $splitWord[$key]= '';
+                $words[$key]= '';
             }
         }
         if ($skip || (!$skip&&$consonant)){
-            $splitWord[]= '-ay';
+            $words[]= '-ay';
         }
-        $word = implode('', $splitWord);
+        $string = implode('', $words);
     }
 
     /**
-     * @param $c
+     * @param $letter
      * @return bool
      */
-    private function  isVowel($c): bool
+    private function  isVowel($letter): bool
     {
-        switch (strtoupper($c)){
+        switch (strtoupper($letter)){
             case 'A':
             case 'E':
             case 'I':

@@ -9,8 +9,8 @@ use Nette\Application\UI;
 
 
 class PostPresenter extends Nette\Application\UI\Presenter{
-	private $originalString;
-	private $pigLatinString;
+	private $originalString='';
+	private $pigLatinString='';
 
     /**
      * @param UI\Form $form
@@ -35,7 +35,7 @@ class PostPresenter extends Nette\Application\UI\Presenter{
      * Only to show page for first time
      */
     public function renderShow(): void{
-		if ('' == $this->originalString[0]){
+		if ('' === $this->originalString[0]){
             $strings['original']='';
             $strings['pigLatin']='';
 			$this->template->post = $strings;
