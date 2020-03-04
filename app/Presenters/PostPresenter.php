@@ -17,15 +17,15 @@ class PostPresenter extends Nette\Application\UI\Presenter{
      * @param \stdClass $values
      */
     public function commentFormSucceeded(UI\Form $form, \stdClass $values): void{
-		
 		$this->originalString=$values->word;
 		$splitString=preg_split ('/\s+/',trim($values->word));
+
 		foreach ($splitString as $key => $value) {
 			new Translate($value);
             $splitString[$key]=$value;
 		}
-		$this->pigLatinString=implode(' ', $splitString);
 
+		$this->pigLatinString=implode(' ', $splitString);
         $strings['original']= $this->originalString;
         $strings['pigLatin']=$this->pigLatinString;
 		$this->template->post = $strings;
@@ -53,6 +53,7 @@ class PostPresenter extends Nette\Application\UI\Presenter{
 			 ->setRequired();
 		$form->addSubmit('send', 'Přeložit');
 		$form->onSuccess[] = [$this, 'commentFormSucceeded'];
+
 		return $form;
 	}
 

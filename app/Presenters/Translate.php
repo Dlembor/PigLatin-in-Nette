@@ -20,12 +20,12 @@ class Translate
                     $splitWord[]="'hay";
                     break;
                 }
-
                 $skip=true;
                 break;
             }else{
                 $consonant=true;
                 $splitWord[]=$value;
+
                 if(strtoupper($value) === 'Q' && strtoupper($splitWord[$key+1]) === 'U' &&$this->isVowel($splitWord[$key + 2])){
                     $splitWord[]=$splitWord[$key+1];
                     $splitWord[$key+1]= '';
