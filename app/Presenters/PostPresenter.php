@@ -9,85 +9,99 @@ use Nette\Application\UI;
 
 
 class PostPresenter extends Nette\Application\UI\Presenter{
-	public $word=array("","");
+	public $word=array('', '');
 
-	/********************************************
-	* input - one char
-	* return - bool if char is vowel
-	*********************************************/
-	function  isVowel($c){ 
-    	return ($c == 'A' || $c == 'E' || $c == 'I' || $c == 'O' || $c == 'U' || 
-            $c == 'a' || $c == 'e' || $c == 'i' || $c == 'o' || $c == 'u'); 
-	} 
 
-	/********************************************
-	* input - word to translate
-	* return - word in PigLatin
-	*********************************************/
-	function Translate($word){
-		$split_word = str_split($word);
+    /**
+     * @param $c
+     * @return bool
+     */
+    private function  isVowel($c): bool
+    {
+        switch (strtoupper($c)){
+            case 'A':
+            case 'E':
+            case 'I':
+            case 'O':
+            case 'U':
+                return true;
+            default:
+                return false;
+        }
+	}
+
+    /**
+     * @param $word
+     * @return string
+     */
+	private function translate($word): string
+    {
+		$splitWord = str_split($word);
 		$skip=false;
 		$consonant=false;
-		foreach ($split_word as $key => $value) {
+		foreach ($splitWord as $key => $value) {
 			if ($this->isVowel($value)){
 				if ($key==0){
-					$split_word[]="'hay";
+					$splitWord[]="'hay";
 					break;
-				}else{
-					$skip=true;
-					break;
-				}			
-			}else{
-				$consonant=true;
-				$split_word[]=$value;
-				if(strtoupper($value)=="Q"&& strtoupper($split_word[$key+1])=="U"&&$this->isVowel($split_word[$key+2])){
-					$split_word[]=$split_word[$key+1];
-					$split_word[$key+1]="";
 				}
-				$split_word[$key]="";
+
+                $skip=true;
+                break;
+            }else{
+				$consonant=true;
+				$splitWord[]=$value;
+				if(strtoupper($value) === 'Q' && strtoupper($splitWord[$key+1]) === 'U' &&$this->isVowel($splitWord[$key + 2])){
+					$splitWord[]=$splitWord[$key+1];
+					$splitWord[$key+1]= '';
+				}
+				$splitWord[$key]= '';
 			}
 		}
 		if ($skip || (!$skip&&$consonant)){
-			$split_word[]="-ay";
+			$splitWord[]= '-ay';
 		}
-		$word = implode("", $split_word);
+		$word = implode('', $splitWord);
 		return $word;
 	}
 
-	/********************************************
-	* input - form datas to show 
-	*********************************************/
-	public function commentFormSucceeded(UI\Form $form, \stdClass $values): void{
+
+    /**
+     * @param UI\Form $form
+     * @param \stdClass $values
+     */
+    public function commentFormSucceeded(UI\Form $form, \stdClass $values): void{
 		
 		$this->word[0]=$values->word;
-		$RozsekanyRadek=preg_split ('/\s+/',trim($values->word));
-		foreach ($RozsekanyRadek as $key => $value) {
-			$RozsekanyRadek[$key]=$this->Translate($value);
+		$splitString=preg_split ('/\s+/',trim($values->word));
+		foreach ($splitString as $key => $value) {
+			$splitString[$key]=$this->translate($value);
 
 		}
 
-		$this->word[1]=implode(" ", $RozsekanyRadek);
+		$this->word[1]=implode(' ', $splitString);
 		$this->template->post = $this->word;
 	}
-	
-	/********************************************
-	* Only to show page for 1st time
-	*********************************************/
-	public function renderShow(): void{
-		if ($this->word[0]==""){
-			$vypis=array("","");
-			$this->template->post = $vypis;
+
+
+    /**
+     * Only to show page for first time
+     */
+    public function renderShow(): void{
+		if ('' == $this->word[0]){
+			$output=array('', '');
+			$this->template->post = $output;
 
 		}
 	}
-	
-	/********************************************
-	* Create form to get word and start Translate after hitting submit
-	* return - form (only for showing what was written)
-	*********************************************/
-	protected function createComponentCommentForm(){
-		$form = new UI\Form; 
 
+    /**
+     * Create form to get word and start translate after hitting submit
+     * @return UI\Form
+     */
+    public function createComponentCommentForm(): \Nette\Application\UI\Form
+    {
+		$form = new UI\Form;
 		$form->addText('word', 'String pro překlad: ')
 			 ->setRequired();
 		$form->addSubmit('send', 'Přeložit');
